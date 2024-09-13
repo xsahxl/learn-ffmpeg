@@ -65,6 +65,7 @@ ffmpeg -i input1.mp4 -i output2_resized.mp4 -filter_complex "[0:v:0][0:a:0][1:v:
 
 ```bash
 ffmpeg -i input1.mp4 -i watermark.png -filter_complex overlay=10:10 output.mp4 -y
+ffmpeg -i video.mp4 -i image.jpg -filter_complex "[0:v][1:v]overlay=0:0" output.mp4
 ```
 
 这里 -i watermark.png 是水印图片，overlay=10:10 表示水印的位置
@@ -149,7 +150,8 @@ ffmpeg -i output_video_no_audio.mp4 -i output_audio.mp3 -c:v copy -c:a aac -stri
 # 10. 视频截图
 
 ```bash
-ffmpeg -i input.mp4 -vf fps=1/5 -qscale:v 2 -y output%d.jpg
+ffmpeg -i input1.mp4 images/output%d.jpg
+ffmpeg -i input1.mp4 -vf fps=1/5 -qscale:v 2 -y images/output%d.jpg
 ```
 
 -i input.mp4：指定输入文件为 input.mp4。
@@ -170,4 +172,10 @@ output%d.jpg 指定输出文件名格式。%d 是一个占位符，表示按顺�
 ```bash
 ffmpeg -i input.mp4 -vframes 1 -ss [时间点] -qscale:v 2 -y output.jpg
 ffmpeg -i input.mp4 -vframes 1 -ss 0 -qscale:v 2 -y output.jpg
+```
+
+# 11. 图片生成视频
+
+```bash
+ffmpeg -framerate 24 -i images/output%d.jpg -c:v libx264 -r 24 -pix_fmt yuv420p video_output.mp4 -y
 ```
